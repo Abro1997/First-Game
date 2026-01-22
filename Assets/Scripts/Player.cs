@@ -5,18 +5,20 @@ public class Player : MonoBehaviour
 {
     private Rigidbody2D rb;
     private Vector2 moveDirection;
+    private Transform playerTransform;
     [SerializeField] private float moveSpeed = 5f;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        playerTransform = GetComponent<Transform>();
     }
 
     private void Update()
     {
         float MoveX = 0f;
         float MoveY = 0f;
-        
+
         if (Keyboard.current.upArrowKey.isPressed)
         {
             MoveY = 1f;
@@ -34,7 +36,9 @@ public class Player : MonoBehaviour
             MoveX = 1f;
         }
 
+
         moveDirection = new Vector2(MoveX, MoveY).normalized;
+
     }
     private void FixedUpdate()
     {
