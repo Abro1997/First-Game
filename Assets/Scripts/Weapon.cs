@@ -3,38 +3,81 @@ using UnityEngine.InputSystem;
 
 public class Weapon : MonoBehaviour
 {
+    [Header("Stretch")]
+    [SerializeField] private float minLength = 0.3f;
+    [SerializeField] private float maxLength = 0.8f;
 
+    [Header("Shooting")]
     [SerializeField] private Transform firePoint;
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private float fireRate = 0.5f;
 
+
+    private Vector3 firePointBaseLocalPos;
+
     private float lastFireTime;
-    private void Aim()
+    private Vector3 initialScale;
+
+    private void Awake()
     {
-        Vector2 mouseScreenPosition = Mouse.current.position.ReadValue();
-        Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(mouseScreenPosition);
-        mouseWorldPosition.z = 0f;
+        initialScale = transform.localScale;
+        firePointBaseLocalPos = firePoint.localPosition;
+    }
 
-        Vector2 direction = mouseWorldPosition - transform.position;
+    private void Update()
+    {
+        AimAndStretch();
+        FixFirePointOrientation();
+
+        if (Mouse.current.leftButton.isPressed)
+            TryShoot();
+    }
+
+    private void AimAndStretch()
+    {
+        Vector3 mouseWorldPos = GetMouseWorldPosition();
+
+        // Direction & rotation
+        Vector2 direction = mouseWorldPos - transform.position;
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-
         transform.rotation = Quaternion.Euler(0f, 0f, angle);
+
+        // Stretch amount
+        float distance = direction.magnitude;
+        float clampedDistance = Mathf.Clamp(distance, minLength, maxLength);
+
+        // Scale only on X
+        Vector3 scale = initialScale;
+        scale.x = clampedDistance;
+        transform.localScale = scale;
     }
 
     private void TryShoot()
     {
-        if (Time.time < lastFireTime + fireRate) return;
-        
+        if (Time.time < lastFireTime + fireRate)
+            return;
+
         Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
         lastFireTime = Time.time;
     }
-    private void Update()
-    {
-        Aim();
 
-        if (Mouse.current.leftButton.isPressed)
-        {
-            TryShoot();
-        }
+    private Vector3 GetMouseWorldPosition()
+    {
+        Vector3 mouseScreenPos = Mouse.current.position.ReadValue();
+        mouseScreenPos.z = Camera.main.nearClipPlane;
+        Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(mouseScreenPos);
+        mouseWorldPos.z = 0f;
+        return mouseWorldPos;
     }
+    private void FixFirePointOrientation()
+{
+    float z = transform.eulerAngles.z;
+
+    bool aimingLeft = z > 90f && z < 270f;
+
+    Vector3 localPos = firePointBaseLocalPos;
+    localPos.y = aimingLeft ? -Mathf.Abs(localPos.y) : Mathf.Abs(localPos.y);
+    firePoint.localPosition = localPos;
+}
+
 }

@@ -31,16 +31,6 @@ public class WeaponPivot : MonoBehaviour
         {
             pos.x = -initialX;  // left side
         }
-        else
-        {
-            //movement-based side
-            float xVelocity = playerRigidbody.linearVelocity.x;
-
-            if (xVelocity > 0.01f)
-                pos.x = initialX;
-            else if (xVelocity < -0.01f)
-                pos.x = -initialX;
-        }
 
         weaponPivotTransform.localPosition = pos;
     }

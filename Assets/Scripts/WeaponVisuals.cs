@@ -29,13 +29,5 @@ public class WeaponVisuals : MonoBehaviour
             spriteRenderer.flipY = true;  // facing left
             return;
         }
-
-        //Movement-based facing
-        float xVelocity = playerRigidbody.linearVelocity.x;
-
-        if (xVelocity > 0.01f)
-            spriteRenderer.flipY = false;
-        else if (xVelocity < -0.01f)
-            spriteRenderer.flipY = true;
     }
 }
