@@ -29,10 +29,20 @@ public class Enemy : MonoBehaviour
             playerTransform = player.transform;
     }
 
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        Player player = collision.collider.GetComponent<Player>();
+
+    if (player != null)
+    {
+        player.TakeDamage(1);
+    }
+    }
+
     private void MoveTowardsPlayer()
     {
         Vector2 direction = (playerTransform.position - transform.position).normalized;
-        Vector2 newPosition = rb.position + direction * Time.deltaTime * moveSpeed;
+        Vector2 newPosition = rb.position + direction * Time.fixedDeltaTime * moveSpeed;
         rb.MovePosition(newPosition);
     }
     public void TakeDamage(float damage)

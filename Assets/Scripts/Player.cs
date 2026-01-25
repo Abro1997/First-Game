@@ -8,10 +8,19 @@ public class Player : MonoBehaviour
     private Transform playerTransform;
     [SerializeField] private float moveSpeed = 5f;
 
+    [Header("Health Stats")]
+
+    [SerializeField] private int MaxHealth = 20;
+    [SerializeField] private float iFrames = 1.5f;
+
+    private int currentHealth;
+    private float lastDamageTime;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         playerTransform = GetComponent<Transform>();
+        currentHealth = MaxHealth;
     }
 
     private void Update()
@@ -43,5 +52,26 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         rb.linearVelocity = moveDirection * moveSpeed;
+    }
+
+    public void TakeDamage(int damage)
+    {
+        if (Time.time < lastDamageTime)
+            return;
+
+        lastDamageTime = Time.time + iFrames;
+        currentHealth -= damage;
+        Debug.Log("Player Health: " + currentHealth);
+
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
+    }
+
+    private void Die()
+    {
+        Debug.Log("Player Died");
+        Destroy(gameObject);
     }
 }
