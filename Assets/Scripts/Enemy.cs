@@ -13,6 +13,7 @@ public class Enemy : MonoBehaviour
     private float health;
     private Transform playerTransform;
     public static event EventHandler OnEnemySpawn;
+    public event EventHandler OnEnemyDamaged;
 
     private void Awake()
     {
@@ -55,6 +56,7 @@ public class Enemy : MonoBehaviour
     public void TakeDamage(float damage)
     {
         health -= damage;
+        OnEnemyDamaged?.Invoke(this, EventArgs.Empty);
 
         rb.AddForce(-transform.right * knockbackForce, ForceMode2D.Impulse);
 

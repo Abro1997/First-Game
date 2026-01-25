@@ -86,4 +86,8 @@ public class Player : MonoBehaviour
     {
         return currentHealth;
     }
+    public float GetIFramesDuration()
+    {
+        return iFrames;
+    }
 }

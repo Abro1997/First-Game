@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections;
 
 public class PlayerVisuals : MonoBehaviour
 {
@@ -7,7 +8,9 @@ public class PlayerVisuals : MonoBehaviour
     [SerializeField] private Transform playerTransform;
     [SerializeField] private Player player;
     [SerializeField] private PlayerHealthUI healthUI;
+    [SerializeField] private float blinkInterval = 0.1f;
 
+    private Coroutine blinkCoroutine;
     private SpriteRenderer spriteRenderer;
 
     private void Awake()
@@ -33,6 +36,12 @@ public class PlayerVisuals : MonoBehaviour
     private void Player_OnHealthChanged(object sender, Player.OnPlayerHealthChanged e)
     {
         healthUI.UpdateHearts(e.currentHealth);
+
+        if (blinkCoroutine != null)
+        {
+            StopCoroutine(blinkCoroutine);
+        }
+        blinkCoroutine = StartCoroutine(Blink());
     }
 
     private void Update()
@@ -54,4 +63,21 @@ public class PlayerVisuals : MonoBehaviour
         else if (xVelocity < -0.01f)
             spriteRenderer.flipX = true;
     }
+    private IEnumerator Blink()
+    {
+        float elapsed = 0f;
+        float iFrames = player.GetIFramesDuration();
+
+        while
+        (elapsed < iFrames)
+        {
+            spriteRenderer.enabled = !spriteRenderer.enabled;
+            yield return new WaitForSeconds(blinkInterval);
+
+            elapsed += blinkInterval;
+        }
+        spriteRenderer.enabled = true;
+    }
+
+
 }
