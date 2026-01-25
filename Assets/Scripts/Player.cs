@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -7,6 +8,11 @@ public class Player : MonoBehaviour
     private Vector2 moveDirection;
     private Transform playerTransform;
     [SerializeField] private float moveSpeed = 5f;
+    public event EventHandler<OnPlayerHealthChanged> OnHealthChanged;
+    public class OnPlayerHealthChanged : EventArgs
+    {
+        public int currentHealth;
+    }
 
     [Header("Health Stats")]
 
@@ -61,6 +67,8 @@ public class Player : MonoBehaviour
 
         lastDamageTime = Time.time + iFrames;
         currentHealth -= damage;
+
+        OnHealthChanged?.Invoke(this, new OnPlayerHealthChanged { currentHealth = currentHealth });
         Debug.Log("Player Health: " + currentHealth);
 
         if (currentHealth <= 0)
@@ -73,5 +81,10 @@ public class Player : MonoBehaviour
     {
         Debug.Log("Player Died");
         Destroy(gameObject);
+    }
+
+    public int GetCurrentHealth()
+    {
+        return currentHealth;
     }
 }

@@ -5,6 +5,8 @@ public class PlayerVisuals : MonoBehaviour
 {
     [SerializeField] private Rigidbody2D playerRigidbody;
     [SerializeField] private Transform playerTransform;
+    [SerializeField] private Player player;
+    [SerializeField] private PlayerHealthUI healthUI;
 
     private SpriteRenderer spriteRenderer;
 
@@ -13,24 +15,38 @@ public class PlayerVisuals : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
+    private void OnEnable()
+    {
+        player.OnHealthChanged += Player_OnHealthChanged;
+    }
+
+    private void OnDisable()
+    {
+        player.OnHealthChanged -= Player_OnHealthChanged;
+    }
+
+    private void Start()
+    {
+        healthUI.UpdateHearts(player.GetCurrentHealth());
+    }
+
+    private void Player_OnHealthChanged(object sender, Player.OnPlayerHealthChanged e)
+    {
+        healthUI.UpdateHearts(e.currentHealth);
+    }
+
     private void Update()
     {
-        //Mouse-based facing
+        // Mouse-based facing
         Vector3 mouseScreenPos = Mouse.current.position.ReadValue();
         Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(mouseScreenPos);
 
         if (mouseWorldPos.x > playerTransform.position.x)
-        {
-            spriteRenderer.flipX = false; // face right
-            return;
-        }
+            spriteRenderer.flipX = false;
         else if (mouseWorldPos.x < playerTransform.position.x)
-        {
-            spriteRenderer.flipX = true;  // face left
-            return;
-        }
+            spriteRenderer.flipX = true;
 
-        //movement-based facing
+        // Movement-based facing fallback
         float xVelocity = playerRigidbody.linearVelocity.x;
 
         if (xVelocity > 0.01f)
