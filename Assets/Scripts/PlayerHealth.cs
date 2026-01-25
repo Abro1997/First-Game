@@ -1,27 +1,30 @@
+using System;
 using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
 {
     [Header("Health Stats")]
-
-    [SerializeField] private int MaxHealth = 20;
-    [SerializeField] private float iFrames = 1.5f;
+    [SerializeField] private int maxHealth = 20;
+    [SerializeField] private float iFramesDuration = 1.5f;
 
     private int currentHealth;
+    private float nextDamageTime;
+
 
     private void Awake()
     {
-        currentHealth = MaxHealth;
+        currentHealth = maxHealth;
+        nextDamageTime = 0f;
     }
 
     public void TakeDamage(int damage)
     {
-        if (Time.time < iFrames)
+        if (Time.time < nextDamageTime)
             return;
 
-        iFrames = Time.time + iFrames;
+        nextDamageTime = Time.time + iFramesDuration;
+
         currentHealth -= damage;
-        Debug.Log("Player Health: " + currentHealth);
 
         if (currentHealth <= 0)
         {

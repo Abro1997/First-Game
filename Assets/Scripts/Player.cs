@@ -69,7 +69,6 @@ public class Player : MonoBehaviour
         currentHealth -= damage;
 
         OnHealthChanged?.Invoke(this, new OnPlayerHealthChanged { currentHealth = currentHealth });
-        Debug.Log("Player Health: " + currentHealth);
 
         if (currentHealth <= 0)
         {
