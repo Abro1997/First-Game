@@ -11,5 +11,13 @@ public class GameManager : MonoBehaviour
         waveNumber = 1;
     }
 
-    
+    public int GetWaveNumber()
+    {
+        return waveNumber;
+    }
+
+    public void IncreaseWaveNumber()
+    {
+        waveNumber++;
+    }
 }
