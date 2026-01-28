@@ -34,19 +34,20 @@ public class Player : MonoBehaviour
         float MoveX = 0f;
         float MoveY = 0f;
 
-        if (Keyboard.current.upArrowKey.isPressed)
+        if (GameInput.Instance.IsUpActionPressed())
         {
             MoveY = 1f;
         }
-        if (Keyboard.current.downArrowKey.isPressed)
+
+        if (GameInput.Instance.IsDownActionPressed())
         {
             MoveY = -1f;
         }
-        if (Keyboard.current.leftArrowKey.isPressed)
+        if (GameInput.Instance.IsLeftActionPressed())
         {
             MoveX = -1f;
         }
-        if (Keyboard.current.rightArrowKey.isPressed)
+        if (GameInput.Instance.IsRightActionPressed())
         {
             MoveX = 1f;
         }

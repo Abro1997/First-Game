@@ -5,10 +5,10 @@ public class EnemySpawner : MonoBehaviour
     [Header("Enemy")]
     [SerializeField] private GameObject enemyPrefab;
 
-    [Header("Spawn Settings")]
-    [SerializeField] private float spawnInterval = 3f;
-    [SerializeField] private int maxEnemies = 20;
-    [SerializeField] private float spawnOffset = 1.5f;
+
+    private float spawnInterval = 3f;
+    private int maxEnemies = 20;
+    private float spawnOffset = 1.5f;
 
     private Vector2 spawnPos;
     private float timer;

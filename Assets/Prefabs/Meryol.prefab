@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7480119911344424099}
   - component: {fileID: 2031623068196205733}
   m_Layer: 9
-  m_Name: Enemy
+  m_Name: Meryol
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
