@@ -136,6 +136,15 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""PlayerInterract"",
+                    ""type"": ""Button"",
+                    ""id"": ""6bd0b653-4f88-49ac-8272-60e208722283"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -193,6 +202,17 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""action"": ""PlayerLeft"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""046d7492-33a5-493f-8b21-dd0263c7583e"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PlayerInterract"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -206,6 +226,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         m_Player_PlayerDown = m_Player.FindAction("PlayerDown", throwIfNotFound: true);
         m_Player_PlayerRight = m_Player.FindAction("PlayerRight", throwIfNotFound: true);
         m_Player_PlayerLeft = m_Player.FindAction("PlayerLeft", throwIfNotFound: true);
+        m_Player_PlayerInterract = m_Player.FindAction("PlayerInterract", throwIfNotFound: true);
     }
 
     ~@InputActions()
@@ -291,6 +312,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_PlayerDown;
     private readonly InputAction m_Player_PlayerRight;
     private readonly InputAction m_Player_PlayerLeft;
+    private readonly InputAction m_Player_PlayerInterract;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -322,6 +344,10 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/PlayerLeft".
         /// </summary>
         public InputAction @PlayerLeft => m_Wrapper.m_Player_PlayerLeft;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/PlayerInterract".
+        /// </summary>
+        public InputAction @PlayerInterract => m_Wrapper.m_Player_PlayerInterract;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -363,6 +389,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @PlayerLeft.started += instance.OnPlayerLeft;
             @PlayerLeft.performed += instance.OnPlayerLeft;
             @PlayerLeft.canceled += instance.OnPlayerLeft;
+            @PlayerInterract.started += instance.OnPlayerInterract;
+            @PlayerInterract.performed += instance.OnPlayerInterract;
+            @PlayerInterract.canceled += instance.OnPlayerInterract;
         }
 
         /// <summary>
@@ -389,6 +418,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @PlayerLeft.started -= instance.OnPlayerLeft;
             @PlayerLeft.performed -= instance.OnPlayerLeft;
             @PlayerLeft.canceled -= instance.OnPlayerLeft;
+            @PlayerInterract.started -= instance.OnPlayerInterract;
+            @PlayerInterract.performed -= instance.OnPlayerInterract;
+            @PlayerInterract.canceled -= instance.OnPlayerInterract;
         }
 
         /// <summary>
@@ -464,5 +496,12 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnPlayerLeft(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "PlayerInterract" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnPlayerInterract(InputAction.CallbackContext context);
     }
 }

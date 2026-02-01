@@ -36,4 +36,9 @@ public class GameInput : MonoBehaviour
     {
         inputActions.Player.Disable();
     }
+    public bool IsInteractPressed()
+    {
+        return inputActions.Player.PlayerInterract.WasPressedThisFrame();
+    }
+
 }
