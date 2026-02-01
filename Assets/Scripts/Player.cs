@@ -8,6 +8,11 @@ public class Player : MonoBehaviour
     private Vector2 moveDirection;
     private Transform playerTransform;
     [SerializeField] private float moveSpeed = 5f;
+    public event EventHandler<OnPlayerMoneyPickup> OnMoneyPickup;
+    public class OnPlayerMoneyPickup : EventArgs
+    {
+        public int moneyValue;
+    }
     public event EventHandler<OnPlayerHealthChanged> OnHealthChanged;
     public class OnPlayerHealthChanged : EventArgs
     {
@@ -60,6 +65,18 @@ public class Player : MonoBehaviour
     {
         rb.linearVelocity = moveDirection * moveSpeed;
     }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.TryGetComponent<Money>(out Money money))
+        {
+            OnMoneyPickup?.Invoke(this, new OnPlayerMoneyPickup
+            {
+                moneyValue = money.GetMoneyValue()
+            });
+            money.DestroyMoney();
+        }
+    }
+   
 
     public void TakeDamage(int damage)
     {

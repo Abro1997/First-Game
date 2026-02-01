@@ -1,14 +1,22 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {   
-    
+    [Header("Coin Stats")]
+    [SerializeField] private GameObject commonCoinDrop;
+    [SerializeField] private GameObject rareCoinDrop;
+    [SerializeField] private int coinDropCount;
+    [SerializeField] private float coinDropRadius = 0.5f;
+    [SerializeField] private int chanceForRareCoin = 10; // Percentage chance to drop a rare coin
+
     [Header("Stats")]
     [SerializeField] private float maxHealth = 100f;
     [SerializeField] private float knockbackForce = 2f;
     [SerializeField] private float moveSpeed = 2f;
 
+    private bool isDead = false;
     private Rigidbody2D rb;
     private float health;
     private Transform playerTransform;
@@ -67,6 +75,23 @@ public class Enemy : MonoBehaviour
     }
     private void Die()
     {
-        Destroy(gameObject);
+        if (isDead) return;
+        isDead = true;
+        SpawnCoins();
+        Destroy(gameObject);      
+    }
+    private void SpawnCoins()
+    {
+        for (int i = 0; i < coinDropCount; i++)
+        {
+            int randomIndex = UnityEngine.Random.Range(0,100);
+            GameObject coinToSpawn = commonCoinDrop;
+            if (randomIndex < chanceForRareCoin) 
+            {
+                coinToSpawn = rareCoinDrop;
+            }
+            Vector2 spawnPosition = transform.position + (Vector3)(UnityEngine.Random.insideUnitCircle * coinDropRadius);
+            Instantiate(coinToSpawn, spawnPosition, Quaternion.identity);
+        }
     }
 }

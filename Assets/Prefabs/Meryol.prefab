@@ -121,6 +121,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e7ceb3974739f444a123ded9d65afc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  commonCoinDrop: {fileID: 6439922846800295600, guid: 769ebeb3b8097d34795c34bc7c1b1dca, type: 3}
+  rareCoinDrop: {fileID: 2641894149511926341, guid: 301814f71cf65414f8d92cc33b36762d, type: 3}
+  coinDropCount: 1
+  coinDropRadius: 0.5
+  chanceForRareCoin: 10
   maxHealth: 100
   knockbackForce: 0.5
   moveSpeed: 2

@@ -57,7 +57,7 @@ public class EnemySpawner : MonoBehaviour
             spawnInterval = Mathf.Max(0.5f, spawnInterval - 0.05f);
             enemiesPerWave = enemiesPerWave + 2 * GameManager.Instance.GetWaveNumber();
             fastEnemyTypeChance = SpawnChanceByWave(fastEnemyTypeChance, fastEnemyWave, fastEnemyChanceIncrement);
-            
+
             GameManager.Instance.IncreaseWaveNumber();
         }
     }
@@ -89,13 +89,13 @@ public class EnemySpawner : MonoBehaviour
                 spawnPos = new Vector2(camWidth + spawnOffset, Random.Range(-camHeight, camHeight));
                 break;
         }
-        if(enemyTypeRoll < fastEnemyTypeChance)
+        if (enemyTypeRoll < fastEnemyTypeChance)
         {
             Instantiate(fastEnemy, spawnPos, Quaternion.identity);
             return;
         }
         Instantiate(normalEnemy, spawnPos, Quaternion.identity);
-       
+
     }
     private int CountEnemies()
     {
