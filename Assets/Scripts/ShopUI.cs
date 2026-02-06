@@ -1,8 +1,13 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class ShopUI : MonoBehaviour
 {
+    public static ShopUI Instance { get; private set; }
+    public event EventHandler OnBuyDamage;
+    public event EventHandler OnBuySpeed;
+    public event EventHandler OnBuyFireRate;
     [Header("Buttons")]
     [SerializeField] private Button buyDamageButton;
     [SerializeField] private Button buySpeedButton;
@@ -16,6 +21,7 @@ public class ShopUI : MonoBehaviour
 
     private void Awake()
     {
+        Instance = this;
         buyDamageButton.onClick.AddListener(OnBuyDamageClicked);
         buySpeedButton.onClick.AddListener(OnBuySpeedClicked);
         buyFireRateButton.onClick.AddListener(OnBuyFireRateClicked);
@@ -34,7 +40,7 @@ public class ShopUI : MonoBehaviour
         if (GameManager.Instance.TrySpendMoney(damageCost))
         {
             Debug.Log("Damage upgraded");
-            // Apply upgrade later
+            OnBuyDamage?.Invoke(this, EventArgs.Empty);
         }
         else
         {
@@ -47,6 +53,7 @@ public class ShopUI : MonoBehaviour
         if (GameManager.Instance.TrySpendMoney(speedCost))
         {
             Debug.Log("Speed upgraded");
+            OnBuySpeed?.Invoke(this, EventArgs.Empty);
         }
         else
         {
@@ -59,6 +66,7 @@ public class ShopUI : MonoBehaviour
         if (GameManager.Instance.TrySpendMoney(fireRateCost))
         {
             Debug.Log("Fire rate upgraded");
+            OnBuyFireRate?.Invoke(this, EventArgs.Empty);
         }
         else
         {
@@ -69,6 +77,14 @@ public class ShopUI : MonoBehaviour
     private void OnNextWaveClicked()
     {
         GameManager.Instance.StartNextWave();
+    }
+    private void OnEnable()
+    {
+        GameManager.Instance.RegisterShop(this);
+    }
+    private void OnDisable()
+    {
+        GameManager.Instance.UnregisterShop(this);
     }
 }
 

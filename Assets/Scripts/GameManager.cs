@@ -1,3 +1,4 @@
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -20,7 +21,7 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        waveNumber = 1;
+        waveNumber = 1000;
         currentState = GameState.Playing;
         ExitShop();
     }
@@ -28,6 +29,18 @@ public class GameManager : MonoBehaviour
     {
         player.OnMoneyPickup += Player_OnMoneyPickup;
         enemySpawner.OnWaveEnd += EnemySpawner_OnWaveEnd;
+    }
+    private void ShopUI_OnBuyDamage(object sender, System.EventArgs e)
+    {
+        PlayerStats.Instance.IncreaseDamage(1);
+    }
+    private void ShopUI_OnBuySpeed(object sender, System.EventArgs e)
+    {
+        PlayerStats.Instance.IncreaseMoveSpeed(0.5f);
+    }
+    private void ShopUI_OnBuyFireRate(object sender, System.EventArgs e)
+    {
+        PlayerStats.Instance.DecreaseFireRate(0.1f);
     }
     private void EnemySpawner_OnWaveEnd(object sender, System.EventArgs e)
     {
@@ -101,5 +114,17 @@ public class GameManager : MonoBehaviour
 
         money -= amount;
         return true;
+    }
+    public void RegisterShop(ShopUI shopUI)
+    {
+        shopUI.OnBuyDamage += ShopUI_OnBuyDamage;
+        shopUI.OnBuySpeed += ShopUI_OnBuySpeed;
+        shopUI.OnBuyFireRate += ShopUI_OnBuyFireRate;
+    }
+    public void UnregisterShop(ShopUI shopUI)
+    {
+        shopUI.OnBuyDamage -= ShopUI_OnBuyDamage;
+        shopUI.OnBuySpeed -= ShopUI_OnBuySpeed;
+        shopUI.OnBuyFireRate -= ShopUI_OnBuyFireRate;
     }
 }

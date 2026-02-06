@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System;
 
 public class Weapon : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class Weapon : MonoBehaviour
     [Header("Shooting")]
     [SerializeField] private Transform firePoint;
     [SerializeField] private GameObject bulletPrefab;
-    [SerializeField] private float fireRate = 0.5f;
+    private float fireRate;
 
 
     private Vector3 firePointBaseLocalPos;
@@ -22,6 +23,11 @@ public class Weapon : MonoBehaviour
     {
         initialScale = transform.localScale;
         firePointBaseLocalPos = firePoint.localPosition;
+    }
+    private void Start()
+    {
+        ApplyStats();
+        PlayerStats.Instance.OnStatsChanged += OnStatsChanged;
     }
 
     private void Update()
@@ -70,14 +76,28 @@ public class Weapon : MonoBehaviour
         return mouseWorldPos;
     }
     private void FixFirePointOrientation()
-{
-    float z = transform.eulerAngles.z;
+    {
+        float z = transform.eulerAngles.z;
 
-    bool aimingLeft = z > 90f && z < 270f;
+        bool aimingLeft = z > 90f && z < 270f;
 
-    Vector3 localPos = firePointBaseLocalPos;
-    localPos.y = aimingLeft ? -Mathf.Abs(localPos.y) : Mathf.Abs(localPos.y);
-    firePoint.localPosition = localPos;
-}
+        Vector3 localPos = firePointBaseLocalPos;
+        localPos.y = aimingLeft ? -Mathf.Abs(localPos.y) : Mathf.Abs(localPos.y);
+        firePoint.localPosition = localPos;
+    }
+    private void OnDestroy()
+    {
+        PlayerStats.Instance.OnStatsChanged -= OnStatsChanged;
+    }
+
+    private void OnStatsChanged(object sender, EventArgs e)
+    {
+        ApplyStats();
+    }
+
+    private void ApplyStats()
+    {
+        fireRate = PlayerStats.Instance.GetFireRate();
+    }
 
 }

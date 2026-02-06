@@ -22,6 +22,7 @@ public class Enemy : MonoBehaviour
     private Transform playerTransform;
     public static event EventHandler OnEnemySpawn;
     public event EventHandler OnEnemyDamaged;
+    
 
     private void Awake()
     {
@@ -31,7 +32,11 @@ public class Enemy : MonoBehaviour
     }
     private void Start()
     {
-        OnEnemySpawn?.Invoke(this, EventArgs.Empty);   
+        OnEnemySpawn?.Invoke(this, EventArgs.Empty); 
+    }
+    private void OnStatsChanged(object sender, EventArgs e)
+    {
+        PlayerStats stats = PlayerStats.Instance;
     }
     private void FixedUpdate()
     {

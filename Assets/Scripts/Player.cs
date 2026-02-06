@@ -19,9 +19,6 @@ public class Player : MonoBehaviour
         public int currentHealth;
     }
 
-    [Header("Health Stats")]
-
-    [SerializeField] private int MaxHealth = 20;
     [SerializeField] private float iFrames = 1.5f;
 
     private int currentHealth;
@@ -31,7 +28,13 @@ public class Player : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         playerTransform = GetComponent<Transform>();
-        currentHealth = MaxHealth;
+    }
+    private void Start()
+    {
+        PlayerStats stats = PlayerStats.Instance;
+        moveSpeed = stats.GetMoveSpeed();
+        currentHealth = stats.GetMaxHealth();
+        PlayerStats.Instance.OnStatsChanged += OnStatsChanged;
     }
 
     private void Update()
@@ -76,7 +79,7 @@ public class Player : MonoBehaviour
             money.DestroyMoney();
         }
     }
-   
+
 
     public void TakeDamage(int damage)
     {
@@ -107,5 +110,21 @@ public class Player : MonoBehaviour
     public float GetIFramesDuration()
     {
         return iFrames;
+    }
+    private void OnDestroy()
+    {
+        PlayerStats.Instance.OnStatsChanged -= OnStatsChanged;
+    }
+
+    private void OnStatsChanged(object sender, EventArgs e)
+    {
+        ApplyStats();
+    }
+
+    private void ApplyStats()
+    {
+        PlayerStats stats = PlayerStats.Instance;
+        moveSpeed = stats.GetMoveSpeed();
+        currentHealth = Mathf.Min(currentHealth, stats.GetMaxHealth());
     }
 }

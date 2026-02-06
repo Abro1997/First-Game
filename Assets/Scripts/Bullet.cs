@@ -11,6 +11,11 @@ public class Bullet : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
     }
+    private void Start()
+    {
+            PlayerStats stats = PlayerStats.Instance;
+            damage = stats.GetDamage();
+    }
     private void FixedUpdate()
     {
         // Bullet Goes Forward

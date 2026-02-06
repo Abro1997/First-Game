@@ -26,7 +26,7 @@ public class EnemySpawner : MonoBehaviour
 
     private void Awake()
     {
-        spawnInterval = 2f;
+        spawnInterval = 1f;
         maxEnemiesOnScreen = 10;
         spawnOffset = 1f;
 
@@ -119,7 +119,7 @@ public class EnemySpawner : MonoBehaviour
         if (enemiesSpawned >= enemiesPerWave && CountEnemies() == 0)
         {
             enemiesSpawned = 0;
-            spawnInterval = Mathf.Max(0.5f, spawnInterval - 0.05f);
+            spawnInterval = Mathf.Max(0.01f, spawnInterval - 0.05f);
             enemiesPerWave = enemiesPerWave + 2 * GameManager.Instance.GetWaveNumber();
             fastEnemyTypeChance = SpawnChanceByWave(fastEnemyTypeChance, fastEnemyWave, fastEnemyChanceIncrement);
             OnWaveEnd?.Invoke(this, System.EventArgs.Empty);
