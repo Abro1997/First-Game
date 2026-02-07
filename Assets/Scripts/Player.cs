@@ -23,8 +23,8 @@ public class Player : MonoBehaviour
     private void Start()
     {
         PlayerStats stats = PlayerStats.Instance;
-        moveSpeed = stats.GetMoveSpeed();
-
+        Applystats(stats);
+        stats.OnStatsChanged += OnStatsChanged;
         playerHealth.OnPlayerDied += OnPlayerDied;
     }
 
@@ -72,5 +72,14 @@ public class Player : MonoBehaviour
 
             money.DestroyMoney();
         }
+    }
+    private void OnStatsChanged(object sender, EventArgs e)
+    {
+        PlayerStats stats = PlayerStats.Instance;
+        Applystats(stats);
+    }
+    private void Applystats(PlayerStats stats)
+    {
+        moveSpeed = stats.GetMoveSpeed();
     }
 }
