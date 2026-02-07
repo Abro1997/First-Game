@@ -3,18 +3,30 @@ using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
 {
-    [Header("Health Stats")]
+    public event EventHandler OnPlayerDied;
+
+    public event EventHandler<OnHealthChangedEventArgs> OnHealthChanged;
+    public class OnHealthChangedEventArgs : EventArgs
+    {
+        public int currentHealth;
+        public int maxHealth;
+    }
+
     [SerializeField] private int maxHealth = 20;
-    [SerializeField] private float iFramesDuration = 1.5f;
+    [SerializeField] private float iFramesDuration = 0.25f;
 
     private int currentHealth;
     private float nextDamageTime;
 
-
     private void Awake()
     {
         currentHealth = maxHealth;
-        nextDamageTime = 0f;
+
+        OnHealthChanged?.Invoke(this, new OnHealthChangedEventArgs
+        {
+            currentHealth = currentHealth,
+            maxHealth = maxHealth
+        });
     }
 
     public void TakeDamage(int damage)
@@ -24,17 +36,18 @@ public class PlayerHealth : MonoBehaviour
 
         nextDamageTime = Time.time + iFramesDuration;
 
-        currentHealth -= damage;
+        currentHealth = Mathf.Max(currentHealth - damage, 0);
+
+        OnHealthChanged?.Invoke(this, new OnHealthChangedEventArgs
+        {
+            currentHealth = currentHealth,
+            maxHealth = maxHealth
+        });
 
         if (currentHealth <= 0)
-        {
-            Die();
-        }
+            OnPlayerDied?.Invoke(this, EventArgs.Empty);
     }
 
-    private void Die()
-    {
-        Debug.Log("Player Died");
-        Destroy(gameObject);
-    }
+    public int GetCurrentHealth() => currentHealth;
+    public float GetIFramesDuration() => iFramesDuration;
 }

@@ -145,6 +145,15 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""PlayerPause"",
+                    ""type"": ""Button"",
+                    ""id"": ""0450051d-2355-41ab-b1c5-4828b3166270"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -213,6 +222,17 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""action"": ""PlayerInterract"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""be26f849-1a95-47b1-96cb-149e424a0663"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PlayerPause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -227,6 +247,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         m_Player_PlayerRight = m_Player.FindAction("PlayerRight", throwIfNotFound: true);
         m_Player_PlayerLeft = m_Player.FindAction("PlayerLeft", throwIfNotFound: true);
         m_Player_PlayerInterract = m_Player.FindAction("PlayerInterract", throwIfNotFound: true);
+        m_Player_PlayerPause = m_Player.FindAction("PlayerPause", throwIfNotFound: true);
     }
 
     ~@InputActions()
@@ -313,6 +334,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_PlayerRight;
     private readonly InputAction m_Player_PlayerLeft;
     private readonly InputAction m_Player_PlayerInterract;
+    private readonly InputAction m_Player_PlayerPause;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -348,6 +370,10 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/PlayerInterract".
         /// </summary>
         public InputAction @PlayerInterract => m_Wrapper.m_Player_PlayerInterract;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/PlayerPause".
+        /// </summary>
+        public InputAction @PlayerPause => m_Wrapper.m_Player_PlayerPause;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -392,6 +418,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @PlayerInterract.started += instance.OnPlayerInterract;
             @PlayerInterract.performed += instance.OnPlayerInterract;
             @PlayerInterract.canceled += instance.OnPlayerInterract;
+            @PlayerPause.started += instance.OnPlayerPause;
+            @PlayerPause.performed += instance.OnPlayerPause;
+            @PlayerPause.canceled += instance.OnPlayerPause;
         }
 
         /// <summary>
@@ -421,6 +450,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @PlayerInterract.started -= instance.OnPlayerInterract;
             @PlayerInterract.performed -= instance.OnPlayerInterract;
             @PlayerInterract.canceled -= instance.OnPlayerInterract;
+            @PlayerPause.started -= instance.OnPlayerPause;
+            @PlayerPause.performed -= instance.OnPlayerPause;
+            @PlayerPause.canceled -= instance.OnPlayerPause;
         }
 
         /// <summary>
@@ -503,5 +535,12 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnPlayerInterract(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "PlayerPause" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnPlayerPause(InputAction.CallbackContext context);
     }
 }

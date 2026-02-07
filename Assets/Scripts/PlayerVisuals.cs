@@ -6,7 +6,7 @@ public class PlayerVisuals : MonoBehaviour
 {
     [SerializeField] private Rigidbody2D playerRigidbody;
     [SerializeField] private Transform playerTransform;
-    [SerializeField] private Player player;
+    [SerializeField] private PlayerHealth playerHealth;
     [SerializeField] private PlayerHealthUI healthUI;
     [SerializeField] private float blinkInterval = 0.1f;
 
@@ -20,29 +20,32 @@ public class PlayerVisuals : MonoBehaviour
 
     private void OnEnable()
     {
-        player.OnHealthChanged += Player_OnHealthChanged;
+        if (playerHealth != null)
+            playerHealth.OnHealthChanged += PlayerHealth_OnHealthChanged;
     }
 
     private void OnDisable()
     {
-        player.OnHealthChanged -= Player_OnHealthChanged;
+        if (playerHealth != null)
+            playerHealth.OnHealthChanged -= PlayerHealth_OnHealthChanged;
     }
 
     private void Start()
     {
-        healthUI.UpdateHearts(player.GetCurrentHealth());
+        if (playerHealth != null)
+            healthUI.UpdateHearts(playerHealth.GetCurrentHealth());
     }
 
-    private void Player_OnHealthChanged(object sender, Player.OnPlayerHealthChanged e)
+    private void PlayerHealth_OnHealthChanged(object sender, PlayerHealth.OnHealthChangedEventArgs e)
     {
         healthUI.UpdateHearts(e.currentHealth);
 
         if (blinkCoroutine != null)
-        {
             StopCoroutine(blinkCoroutine);
-        }
+
         blinkCoroutine = StartCoroutine(Blink());
     }
+
 
     private void Update()
     {
@@ -55,7 +58,7 @@ public class PlayerVisuals : MonoBehaviour
         else if (mouseWorldPos.x < playerTransform.position.x)
             spriteRenderer.flipX = true;
 
-        // Movement-based facing fallback
+        // Movement-based fallback
         float xVelocity = playerRigidbody.linearVelocity.x;
 
         if (xVelocity > 0.01f)
@@ -63,21 +66,19 @@ public class PlayerVisuals : MonoBehaviour
         else if (xVelocity < -0.01f)
             spriteRenderer.flipX = true;
     }
+
     private IEnumerator Blink()
     {
         float elapsed = 0f;
-        float iFrames = player.GetIFramesDuration();
+        float iFrames = playerHealth != null ? playerHealth.GetIFramesDuration() : 0f;
 
-        while
-        (elapsed < iFrames)
+        while (elapsed < iFrames)
         {
             spriteRenderer.enabled = !spriteRenderer.enabled;
             yield return new WaitForSeconds(blinkInterval);
-
             elapsed += blinkInterval;
         }
+
         spriteRenderer.enabled = true;
     }
-
-
 }

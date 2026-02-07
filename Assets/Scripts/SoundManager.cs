@@ -1,26 +1,22 @@
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SoundManager : MonoBehaviour
 {
     public static SoundManager Instance;
-    private Player player;
-    [Header("Audio Sources")]
+
+    private PlayerHealth playerHealth;
+
     [SerializeField] private AudioSource musicSource;
     [SerializeField] private AudioSource sfxSource;
 
-    [Header("Music")]
     [SerializeField] private AudioClip backgroundMusic;
-
-    [Header("Damage SFX")]
     [SerializeField] private AudioClip[] damageClips;
-
-    [Header("Enemy Spawn SFX")]
     [SerializeField] private AudioClip[] enemySpawnClips;
 
     private void Awake()
     {
-
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -29,30 +25,40 @@ public class SoundManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
-
-        Enemy.OnEnemySpawn += OnEnemySpawned;
-
     }
 
-    private void OnDestroy()
+    private void OnEnable()
     {
-        if (player != null)
-        {
-            player.OnHealthChanged -= OnPlayerHealthChanged;
-        }
+        Enemy.OnEnemySpawn += OnEnemySpawned;
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
 
+    private void OnDisable()
+    {
         Enemy.OnEnemySpawn -= OnEnemySpawned;
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
     private void Start()
     {
         PlayMusic();
+        RebindPlayer();
+    }
 
-        player = UnityEngine.Object.FindFirstObjectByType<Player>();
-        if (player != null)
-        {
-            player.OnHealthChanged += OnPlayerHealthChanged;
-        }
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        RebindPlayer();
+    }
+
+    private void RebindPlayer()
+    {
+        if (playerHealth != null)
+            playerHealth.OnHealthChanged -= OnPlayerHealthChanged;
+
+        playerHealth = FindFirstObjectByType<PlayerHealth>();
+
+        if (playerHealth != null)
+            playerHealth.OnHealthChanged += OnPlayerHealthChanged;
     }
 
     private void OnEnemySpawned(object sender, EventArgs e)
@@ -60,7 +66,13 @@ public class SoundManager : MonoBehaviour
         PlayRandomSFX(enemySpawnClips);
     }
 
-
+    private void OnPlayerHealthChanged(
+        object sender,
+        PlayerHealth.OnHealthChangedEventArgs e
+    )
+    {
+        PlayRandomSFX(damageClips);
+    }
 
     private void PlayMusic()
     {
@@ -75,13 +87,8 @@ public class SoundManager : MonoBehaviour
             return;
 
         int index = UnityEngine.Random.Range(0, clips.Length);
-
         sfxSource.pitch = UnityEngine.Random.Range(0.95f, 1.05f);
         sfxSource.PlayOneShot(clips[index]);
         sfxSource.pitch = 1f;
-    }
-    private void OnPlayerHealthChanged(object sender, Player.OnPlayerHealthChanged e)
-    {
-        PlayRandomSFX(damageClips);
     }
 }

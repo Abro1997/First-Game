@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        waveNumber = 1000;
+        waveNumber = 1;
         currentState = GameState.Playing;
         ExitShop();
     }

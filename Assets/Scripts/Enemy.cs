@@ -3,7 +3,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
-{   
+{
     [Header("Coin Stats")]
     [SerializeField] private GameObject commonCoinDrop;
     [SerializeField] private GameObject rareCoinDrop;
@@ -22,7 +22,7 @@ public class Enemy : MonoBehaviour
     private Transform playerTransform;
     public static event EventHandler OnEnemySpawn;
     public event EventHandler OnEnemyDamaged;
-    
+
 
     private void Awake()
     {
@@ -32,7 +32,7 @@ public class Enemy : MonoBehaviour
     }
     private void Start()
     {
-        OnEnemySpawn?.Invoke(this, EventArgs.Empty); 
+        OnEnemySpawn?.Invoke(this, EventArgs.Empty);
     }
     private void OnStatsChanged(object sender, EventArgs e)
     {
@@ -41,23 +41,26 @@ public class Enemy : MonoBehaviour
     private void FixedUpdate()
     {
         if (playerTransform != null)
-        MoveTowardsPlayer();
+            MoveTowardsPlayer();
     }
     private void Update()
     {
-       Player player = UnityEngine.Object.FindFirstObjectByType<Player>();
+        Player player = UnityEngine.Object.FindFirstObjectByType<Player>();
         if (player != null)
             playerTransform = player.transform;
     }
 
     private void OnCollisionStay2D(Collision2D collision)
     {
-        Player player = collision.collider.GetComponent<Player>();
 
-    if (player != null)
-    {
-        player.TakeDamage(1);
-    }
+        PlayerHealth playerHealth =
+            collision.collider.GetComponentInChildren<PlayerHealth>();
+            Debug.Log("Found PlayerHealth: " + playerHealth);
+
+        if (playerHealth != null)
+        {
+            playerHealth.TakeDamage(1);
+        }
     }
 
     private void MoveTowardsPlayer()
@@ -83,15 +86,15 @@ public class Enemy : MonoBehaviour
         if (isDead) return;
         isDead = true;
         SpawnCoins();
-        Destroy(gameObject);      
+        Destroy(gameObject);
     }
     private void SpawnCoins()
     {
         for (int i = 0; i < coinDropCount; i++)
         {
-            int randomIndex = UnityEngine.Random.Range(0,100);
+            int randomIndex = UnityEngine.Random.Range(0, 100);
             GameObject coinToSpawn = commonCoinDrop;
-            if (randomIndex < chanceForRareCoin) 
+            if (randomIndex < chanceForRareCoin)
             {
                 coinToSpawn = rareCoinDrop;
             }

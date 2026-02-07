@@ -129,6 +129,7 @@ MonoBehaviour:
   maxHealth: 100
   knockbackForce: 0.5
   moveSpeed: 2
+  attackCooldown: 0.1
 --- !u!1 &3730445263020869940
 GameObject:
   m_ObjectHideFlags: 0

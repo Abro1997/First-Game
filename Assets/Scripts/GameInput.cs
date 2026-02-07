@@ -2,43 +2,43 @@ using UnityEngine;
 
 public class GameInput : MonoBehaviour
 {
-    private InputActions inputActions;
     public static GameInput Instance { get; private set; }
+
+    private InputActions inputActions;
+
     private void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         Instance = this;
+        DontDestroyOnLoad(gameObject);
+
         inputActions = new InputActions();
         inputActions.Player.Enable();
-
     }
 
-    public bool IsUpActionPressed()
+    private void OnEnable()
     {
-        return inputActions.Player.PlayerUp.IsPressed();
+        inputActions?.Player.Enable();
     }
 
-    public bool IsDownActionPressed()
+    private void OnDisable()
     {
-        return inputActions.Player.PlayerDown.IsPressed();
+        inputActions?.Player.Disable();
     }
 
-    public bool IsLeftActionPressed()
-    {
-        return inputActions.Player.PlayerLeft.IsPressed();
-    }
+    public bool IsUpActionPressed() => inputActions.Player.PlayerUp.IsPressed();
+    public bool IsDownActionPressed() => inputActions.Player.PlayerDown.IsPressed();
+    public bool IsLeftActionPressed() => inputActions.Player.PlayerLeft.IsPressed();
+    public bool IsRightActionPressed() => inputActions.Player.PlayerRight.IsPressed();
 
-    public bool IsRightActionPressed()
-    {
-        return inputActions.Player.PlayerRight.IsPressed();
-    }
+    public bool IsInteractPressed() =>
+        inputActions.Player.PlayerInterract.WasPressedThisFrame();
 
-    private void OnDestroy()
-    {
-        inputActions.Player.Disable();
-    }
-    public bool IsInteractPressed()
-    {
-        return inputActions.Player.PlayerInterract.WasPressedThisFrame();
-    }
-
+    public bool IsPauseActionPressed() =>
+        inputActions.Player.PlayerPause.triggered;
 }
