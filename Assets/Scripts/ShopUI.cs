@@ -77,6 +77,7 @@ public class ShopUI : MonoBehaviour
     private void OnNextWaveClicked()
     {
         GameManager.Instance.StartNextWave();
+        SoundManager.Instance.PlayMusic(SoundManager.MusicState.Gameplay);
     }
     private void OnEnable()
     {

@@ -8,10 +8,24 @@ public class SoundManager : MonoBehaviour
 
     private PlayerHealth playerHealth;
 
+    public enum MusicState
+    {
+        Gameplay,
+        Shop,
+        BossFight,
+        GameOver
+    }
+
+    private MusicState currentMusicState = (MusicState)(-1);
+
     [SerializeField] private AudioSource musicSource;
     [SerializeField] private AudioSource sfxSource;
 
     [SerializeField] private AudioClip backgroundMusic;
+    [SerializeField] private AudioClip shopMusic;
+    [SerializeField] private AudioClip bossFightMusic;
+    [SerializeField] private AudioClip gameOverMusic;
+
     [SerializeField] private AudioClip[] damageClips;
     [SerializeField] private AudioClip[] enemySpawnClips;
 
@@ -41,7 +55,7 @@ public class SoundManager : MonoBehaviour
 
     private void Start()
     {
-        PlayMusic();
+        PlayMusic(MusicState.Gameplay);
         RebindPlayer();
     }
 
@@ -61,24 +75,61 @@ public class SoundManager : MonoBehaviour
             playerHealth.OnHealthChanged += OnPlayerHealthChanged;
     }
 
+    public void PlayMusic(MusicState state)
+    {
+        if (currentMusicState == state)
+            return;
+
+        AudioClip newClip = GetClipFromState(state);
+        if (newClip == null)
+            return;
+
+        currentMusicState = state;
+
+        musicSource.clip = newClip;
+
+        musicSource.loop = state != MusicState.GameOver;
+
+        musicSource.Play();
+    }
+
+    public void ForcePlayMusic(MusicState state)
+    {
+        currentMusicState = (MusicState)(-1);
+        PlayMusic(state);
+    }
+
+    private AudioClip GetClipFromState(MusicState state)
+    {
+        switch (state)
+        {
+            case MusicState.Gameplay: return backgroundMusic;
+            case MusicState.Shop: return shopMusic;
+            case MusicState.BossFight: return bossFightMusic;
+            case MusicState.GameOver: return gameOverMusic;
+            default: return null;
+        }
+    }
+
+    public void PauseMusic()
+    {
+        if (musicSource.isPlaying)
+            musicSource.Pause();
+    }
+
+    public void ResumeMusic()
+    {
+        musicSource.UnPause();
+    }
+
     private void OnEnemySpawned(object sender, EventArgs e)
     {
         PlayRandomSFX(enemySpawnClips);
     }
 
-    private void OnPlayerHealthChanged(
-        object sender,
-        PlayerHealth.OnHealthChangedEventArgs e
-    )
+    private void OnPlayerHealthChanged(object sender, PlayerHealth.OnHealthChangedEventArgs e)
     {
         PlayRandomSFX(damageClips);
-    }
-
-    private void PlayMusic()
-    {
-        musicSource.clip = backgroundMusic;
-        musicSource.loop = true;
-        musicSource.Play();
     }
 
     private void PlayRandomSFX(AudioClip[] clips)

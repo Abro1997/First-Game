@@ -29,16 +29,19 @@ public class PauseMenuUI : MonoBehaviour
         pauseMenuPanel.SetActive(true);
         Time.timeScale = 0f;
         isPaused = true;
+        SoundManager.Instance.PauseMusic();
     }
     private void Resume()
     {
         pauseMenuPanel.SetActive(false);
         Time.timeScale = 1f;
+        SoundManager.Instance.ResumeMusic();
         isPaused = false;
     }
     private void Restart()
     {
         Time.timeScale = 1f;
         UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
+        SoundManager.Instance.ResumeMusic();
     }
 }

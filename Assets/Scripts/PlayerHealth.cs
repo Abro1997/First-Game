@@ -45,7 +45,12 @@ public class PlayerHealth : MonoBehaviour
         });
 
         if (currentHealth <= 0)
+        {
+            SoundManager.Instance.PlayMusic(SoundManager.MusicState.GameOver);
             OnPlayerDied?.Invoke(this, EventArgs.Empty);
+
+        }
+
     }
 
     public int GetCurrentHealth() => currentHealth;
